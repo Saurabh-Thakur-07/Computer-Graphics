@@ -9,6 +9,62 @@ void myInit()
 	glMatrixMode(GL_PROJECTION);
 	gluOrtho2D(0.0, 200.0, 0.0, 300.0);
 }
+void ellipseDisplay(int xc,int yc,int rx,int ry,int rc,int gc,int bc)
+{
+    glPointSize(1.0);
+	glBegin(GL_POLYGON);
+    glColor3f(rc,gc,bc);
+    // int rx=30,ry=15;//major axis minor axis
+    int cx=xc,cy=yc;//coordinates of center
+    float x=0,y=ry,p1,p2,dx,dy;
+    p1=ry*ry+rx*rx*0.25 -rx*rx*ry;
+    dx=2*ry*ry*x;
+    dy=2*rx*rx*y;
+    while(dx < dy)
+    {
+        glVertex2d(cx+x,cy+y);
+        glVertex2d(cx+x,cy-y);
+        glVertex2d(cx-x,cy-y);
+        glVertex2d(cx-x,cy+y);
+        if(p1 < 0)
+        {
+            x++;
+            dx=dx+2*ry*ry;
+            p1 = p1 + dx + ry*ry;
+        }
+        else
+        {
+            x++;
+            y--;
+            dx=dx+2*ry*ry;
+            dy=dy-2*rx*rx;
+            p1 = p1 + dx-dy+ry*ry;
+        }
+    }
+    p2 = (ry*ry*(x+0.5)*(x+0.5))+(rx*rx*(y-1)*(y-1))-(rx*rx*ry*ry);
+    while(y>=0)
+    {
+        glVertex2d(cx+x,cy+y);
+        glVertex2d(cx+x,cy-y);
+        glVertex2d(cx-x,cy-y);
+        glVertex2d(cx-x,cy+y);
+        if(p2 < 0)
+        {
+            x++;
+            y--;
+            dx = dx + 2*ry*ry;
+            dy = dy - 2*rx*rx;
+            p2 = p2 - dy+dx+ rx*rx;
+        }
+        else
+        {
+            y--;
+            dy = dy - 2*rx*rx;
+            p2 = p2 - dy + rx*rx;
+        }
+    }
+    glEnd();
+}
 void circleDisplay(int xc,int yc,int r,int rc,int gc,int bc)
 {
     glPointSize(1.0);
@@ -46,9 +102,12 @@ void circleDisplay(int xc,int yc,int r,int rc,int gc,int bc)
 void display()
 {
     circleDisplay(100,100,30,1,1,0);
+    //for ellitical eyes
+    ellipseDisplay(92,115,6,4,0,0,0);
+    ellipseDisplay(110,115,6,4,0,0,0);
     //for circular eyes
-    circleDisplay(92,115,5,0,0,0);
-    circleDisplay(110,115,5,0,0,0);
+    // circleDisplay(92,115,5,0,0,0);
+    // circleDisplay(110,115,5,0,0,0);
     //for traingular eyes
     // glColor3f(0.0,0.0,0.0);
     // glBegin(GL_POLYGON);
